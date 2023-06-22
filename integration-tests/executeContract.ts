@@ -1,8 +1,8 @@
 import { LCDClient, MnemonicKey, MsgExecuteContract, Wallet } from '../src';
 
 const client = new LCDClient({
-  chainID: 'bombay-12',
-  URL: 'https://bombay-lcd.terra.dev',
+  chainID: 'columbus-5',
+  URL: 'https://lcd.terrarebels.net',
 });
 
 // LocalTerra test1 terra1x46rqay4d3cssq8gxxvqz8xt6nwlz4td20k38v

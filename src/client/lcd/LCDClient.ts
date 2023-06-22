@@ -56,18 +56,18 @@ const DEFAULT_NETWORK_CONFIG: Record<
   Record<string, LCDClientConfig>
 > = {
   mainnet: {
-    'phoenix-1': {
-      chainID: 'phoenix-1',
-      lcd: 'https://phoenix-lcd.terra.dev',
+    'columbus-5': {
+      chainID: 'columbus-5',
+      lcd: 'https://lcd.terrarebels.net',
       gasAdjustment: 1.75,
       gasPrices: { uluna: 0.015 },
       prefix: 'terra',
     },
   },
   testnet: {
-    'pisco-1': {
-      chainID: 'pisco-1',
-      lcd: 'https://pisco-lcd.terra.dev',
+    'rebel-2': {
+      chainID: 'rebel-2',
+      lcd: 'https://lcd.terrarebels.dev',
       gasAdjustment: 1.75,
       gasPrices: { uluna: 0.015 },
       prefix: 'terra',
@@ -156,7 +156,7 @@ export class LCDClient {
   }
 
   public static fromDefaultConfig(network: 'mainnet' | 'testnet') {
-    // TODO: fetch config from assets.terra.money
+    // TODO: fetch config from assets.terrarebels.net
     return new LCDClient(DEFAULT_NETWORK_CONFIG[network]);
   }
 

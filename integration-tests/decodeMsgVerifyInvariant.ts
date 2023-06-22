@@ -4,8 +4,8 @@ import { TxBody } from '@terra-money/terra.proto/cosmos/tx/v1beta1/tx';
 
 async function main() {
   const bombay = new LCDClient({
-    chainID: 'bombay-12',
-    URL: 'https://bombay-lcd.terra.dev',
+    chainID: 'columbus-5',
+    URL: 'https://lcd.terrarebels.net',
     gasPrices: { uusd: 0.15 },
   });
 

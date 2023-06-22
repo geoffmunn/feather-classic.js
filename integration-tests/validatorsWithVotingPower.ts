@@ -1,8 +1,8 @@
 import { LCDClient } from '../src';
 
 const terra = new LCDClient({
-  chainID: 'bombay-12',
-  URL: 'https://bombay-lcd.terra.dev',
+  chainID: 'columbus-5',
+  URL: 'https://lcd.terrarebels.net',
 });
 
 terra.utils.validatorsWithVotingPower().then(x => console.log(x));

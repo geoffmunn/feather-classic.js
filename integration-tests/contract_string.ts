@@ -5,7 +5,7 @@ import {
 } from '../src';
 
 // test1 key from localterra accounts
-const terra = new LCDClient({ URL: "https://bombay-lcd.terra.dev/", chainID: "bombay-12" });
+const terra = new LCDClient({ URL: "https://lcd.terrarebels.net/", chainID: "columbus-5" });
 const key1 = new MnemonicKey({ mnemonic: "notice oak worry limit wrap speak medal online prefer cluster roof addict wrist behave treat actual wasp year salad speed social layer crew genius" });
 const test1 = terra.wallet(key1);
 
