@@ -56,6 +56,9 @@
     "trailingComma": "es5",
     "arrowParens": "avoid"
   },
+  "publishConfig": {
+    "access": "public"
+  },
   "devDependencies": {
     "@types/jest": "^27.0.1",
     "@types/node": "^16.11.7",
