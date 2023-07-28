@@ -1,6 +1,6 @@
 <p>&nbsp;</p>
 <p align="center">
-<img src="https://raw.githubusercontent.com/terra-rebels/feather.js/main/img/featherjs.svg" width=500>
+<img src="https://raw.githubusercontent.com/classic-terra/feather.js/main/img/featherjs.svg" width=500>
 </p>
 
 <p align="center">
@@ -10,7 +10,7 @@ The JavaScript SDK for Terra and Feather chains
 <br/>
 
 <p align="center">
-  <img alt="GitHub" src="https://img.shields.io/github/license/terra-rebels/feather.js">
+  <img alt="GitHub" src="https://img.shields.io/github/license/classic-terra/feather.js">
   <img alt="npm (scoped)" src="https://img.shields.io/npm/v/@terra-rebels/feather.js">
 </p>
 
@@ -24,7 +24,7 @@ The JavaScript SDK for Terra and Feather chains
   ·
   <a href="https://www.npmjs.com/package/@terra-rebels/feather.js">NPM Package</a>
   ·
-  <a href="https://github.com/terra-rebels/feather.js">GitHub</a>
+  <a href="https://github.com/classic-terra/feather.js">GitHub</a>
 </p>
 
 Feather.js is a JavaScript SDK for writing applications that interact with the Terra blockchain from either Node.js, browser, or React Native environments and provides simple abstractions over core data structures, serialization, key management, and API request generation.
@@ -89,7 +89,7 @@ console.log(total);
 
 ### Broadcasting transactions
 
-First, [get](https://faucet.terrarebels.net/) some testnet tokens for `terra1x46rqay4d3cssq8gxxvqz8xt6nwlz4td20k38v`, or use [LocalTerra](https://www.github.com/terra-rebels/LocalTerra).
+First, [get](https://faucet.terrarebels.net/) some testnet tokens for `terra1x46rqay4d3cssq8gxxvqz8xt6nwlz4td20k38v`, or use [LocalTerra](https://www.github.com/classic-terra/LocalTerra).
 
 ```ts
 import { LCDClient, MsgSend, MnemonicKey } from '@terra-rebels/feather.js';
