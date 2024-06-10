@@ -18,15 +18,25 @@ const commonConfig = {
   resolve: {
     extensions: ['.tsx', '.ts', '.js'],
     plugins: [new TsconfigPathsPlugin()],
+    fallback: {
+      crypto: require.resolve("crypto-browserify"),
+      assert: require.resolve('assert/'),
+      stream: require.resolve("stream-browserify"),
+      buffer: require.resolve("buffer/"),
+    },
   },
   plugins: [
     new webpack.IgnorePlugin({
-      resourceRegExp: /wordlists\/(french|spanish|italian|korean|chinese_simplified|chinese_traditional|japanese|czech|portuguese)\.json$/,
+      resourceRegExp:
+        /wordlists\/(french|spanish|italian|korean|chinese_simplified|chinese_traditional|japanese|czech|portuguese)\.json$/,
     }),
     new webpack.IgnorePlugin({
       checkResource(resource) {
-        return resource === './CLIKey'
-      }
+        return resource === './CLIKey';
+      },
+    }),
+    new webpack.IgnorePlugin({
+      resourceRegExp: /.\/build\/Release\/ecdh/,
     }),
   ],
 };
@@ -43,7 +53,7 @@ const webConfig = {
     ...commonConfig.resolve,
     fallback: {
       stream: require.resolve('stream-browserify'),
-      buffer: require.resolve('buffer'),
+      buffer: require.resolve('buffer/'),
     },
   },
   plugins: [
@@ -51,11 +61,8 @@ const webConfig = {
     new webpack.ProvidePlugin({
       Buffer: ['buffer', 'Buffer'],
     }),
-    new webpack.ProvidePlugin({
-      process: 'process/browser',
-    }),
     // new BundleAnalyzerPlugin(),
-  ],
+  ]
 };
 
 const nodeConfig = {

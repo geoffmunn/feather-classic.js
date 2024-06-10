@@ -6,8 +6,8 @@
 describe('Wallet', () => {
   it('sends a MsgSwap transaction', async () => {
     // const terra = new LCDClient({
-    //   URL: 'https://lcd.terrarebels.net',
-    //   chainID: 'columbus-5',
+    //   URL: 'https://soju-lcd.terra.dev',
+    //   chainID: 'soju-0014',
     // });
     // const mk = new MnemonicKey({
     //   mnemonic:

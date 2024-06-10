@@ -1,7 +1,7 @@
 import { AccessConfigUpdate as AccessConfigUpdate_pb } from '@terra-money/terra.proto/cosmwasm/wasm/v1/proposal';
 import { JSONSerializable } from '../../util/json';
 import { AccessConfig } from './AccessConfig';
-import * as Long from 'long';
+import Long from 'long';
 /**
  *
  */

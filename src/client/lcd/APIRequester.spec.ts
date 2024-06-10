@@ -13,25 +13,22 @@ describe('APIRequester', () => {
   it('accept a standard URL', async () => {
     mockedAxios.get.mockResolvedValueOnce({ data: null });
 
-    const request = new APIRequester('https://lcd.terrarebels.net');
+    const request = new APIRequester('https://lcd.terra.dev');
     await request.get('/foo');
 
-    expect(mockedAxios.get).toHaveBeenCalledWith(
-      'https://lcd.terrarebels.net/foo',
-      {
-        params: {},
-      }
-    );
+    expect(mockedAxios.get).toHaveBeenCalledWith('https://lcd.terra.dev/foo', {
+      params: {},
+    });
   });
 
   it('accept a deep URL', async () => {
     mockedAxios.get.mockResolvedValueOnce({ data: null });
 
-    const request = new APIRequester('https://lcd.terrarebels.net/bar');
+    const request = new APIRequester('https://lcd.terra.dev/bar');
     await request.get('/foo');
 
     expect(mockedAxios.get).toHaveBeenCalledWith(
-      'https://lcd.terrarebels.net/bar/foo',
+      'https://lcd.terra.dev/bar/foo',
       { params: {} }
     );
   });
@@ -39,11 +36,11 @@ describe('APIRequester', () => {
   it('accept an URL with search params', async () => {
     mockedAxios.get.mockResolvedValueOnce({ data: null });
 
-    const request = new APIRequester('https://lcd.terrarebels.net?key=123');
+    const request = new APIRequester('https://lcd.terra.dev?key=123');
     await request.get('/foo');
 
     expect(mockedAxios.get).toHaveBeenCalledWith(
-      'https://lcd.terrarebels.net/foo?key=123',
+      'https://lcd.terra.dev/foo?key=123',
       { params: {} }
     );
   });
@@ -51,11 +48,11 @@ describe('APIRequester', () => {
   it('accept an URL with credentials', async () => {
     mockedAxios.get.mockResolvedValueOnce({ data: null });
 
-    const request = new APIRequester('https://:123@lcd.terrarebels.net');
+    const request = new APIRequester('https://:123@lcd.terra.dev');
     await request.get('/foo');
 
     expect(mockedAxios.get).toHaveBeenCalledWith(
-      'https://:123@lcd.terrarebels.net/foo',
+      'https://:123@lcd.terra.dev/foo',
       { params: {} }
     );
   });

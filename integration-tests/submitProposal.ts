@@ -8,8 +8,8 @@ import {
 } from '../src';
 
 const client = new LCDClient({
-  chainID: 'columbus-5',
-  URL: 'https://lcd.terrarebels.net',
+  chainID: 'bombay-12',
+  URL: 'https://bombay-lcd.terra.dev',
 });
 
 // LocalTerra test1 terra1x46rqay4d3cssq8gxxvqz8xt6nwlz4td20k38v

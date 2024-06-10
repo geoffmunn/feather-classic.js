@@ -2,17 +2,14 @@ import { MsgVerifyInvariant } from './MsgVerifyInvariant';
 
 describe('MsgVerifyInvariant', () => {
   it('legacy: deserialize correctly', () => {
-    const send = MsgVerifyInvariant.fromAmino(
-      {
-        type: 'crisis/MsgVerifyInvariant',
-        value: {
-          sender: 'terra1x46rqay4d3cssq8gxxvqz8xt6nwlz4td20k38v',
-          invariantModuleName: 'bank',
-          invariantRoute: 'nonnegative-outstanding-supply',
-        },
+    const send = MsgVerifyInvariant.fromAmino({
+      type: 'crisis/MsgVerifyInvariant',
+      value: {
+        sender: 'terra1x46rqay4d3cssq8gxxvqz8xt6nwlz4td20k38v',
+        invariantModuleName: 'bank',
+        invariantRoute: 'nonnegative-outstanding-supply',
       },
-      true
-    );
+    }, true);
 
     expect(send).toMatchObject({
       sender: 'terra1x46rqay4d3cssq8gxxvqz8xt6nwlz4td20k38v',
@@ -22,17 +19,14 @@ describe('MsgVerifyInvariant', () => {
   });
 
   it('deserialize correctly', () => {
-    const send = MsgVerifyInvariant.fromAmino(
-      {
-        type: 'cosmos-sdk/MsgVerifyInvariant',
-        value: {
-          sender: 'terra1x46rqay4d3cssq8gxxvqz8xt6nwlz4td20k38v',
-          invariantModuleName: 'bank',
-          invariantRoute: 'nonnegative-outstanding-supply',
-        },
+    const send = MsgVerifyInvariant.fromAmino({
+      type: 'cosmos-sdk/MsgVerifyInvariant',
+      value: {
+        sender: 'terra1x46rqay4d3cssq8gxxvqz8xt6nwlz4td20k38v',
+        invariantModuleName: 'bank',
+        invariantRoute: 'nonnegative-outstanding-supply',
       },
-      false
-    );
+    }, false);
 
     expect(send).toMatchObject({
       sender: 'terra1x46rqay4d3cssq8gxxvqz8xt6nwlz4td20k38v',

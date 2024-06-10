@@ -42,7 +42,7 @@ declare global {
 export class Extension {
   private inpageStream!: PostMessageStream;
 
-  constructor(identifier = 'rebel-station') {
+  constructor(identifier = 'station') {
     this.inpageStream = new PostMessageStream({
       name: `${identifier}:inpage`,
       target: `${identifier}:content`,

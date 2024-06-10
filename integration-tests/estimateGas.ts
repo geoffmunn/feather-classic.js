@@ -9,12 +9,12 @@ async function main() {
 	});
 
 	const { data: gasPrices } = await Axios.get(
-		'https://fcd.terrarebels.net/v1/txs/gas_prices'
+		'https://bombay-fcd.terra.dev/v1/txs/gas_prices'
 	);
 
 	const bombay = new LCDClient({
-		chainID: 'columbus-5',
-		URL: 'https://lcd.terrarebels.net',
+		chainID: 'bombay-12',
+		URL: 'https://bombay-lcd.terra.dev',
 		gasPrices: { uluna: gasPrices.uluna }
 	});
 

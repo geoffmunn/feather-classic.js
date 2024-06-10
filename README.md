@@ -1,6 +1,6 @@
 <p>&nbsp;</p>
 <p align="center">
-<img src="https://raw.githubusercontent.com/classic-terra/feather.js/main/img/featherjs.svg" width=500>
+<img src="https://raw.githubusercontent.com/terra-money/feather.js/main/img/featherjs.svg" width=500>
 </p>
 
 <p align="center">
@@ -10,21 +10,21 @@ The JavaScript SDK for Terra and Feather chains
 <br/>
 
 <p align="center">
-  <img alt="GitHub" src="https://img.shields.io/github/license/classic-terra/feather.js">
-  <img alt="npm (scoped)" src="https://img.shields.io/npm/v/@terra-rebels/feather.js">
+  <img alt="GitHub" src="https://img.shields.io/github/license/terra-money/feather.js">
+  <img alt="npm (scoped)" src="https://img.shields.io/npm/v/@terra-money/feather.js">
 </p>
 
 <p align="center">
-  <a href="https://docs.terrarebels.net/develop/feather-js/"><strong>Explore the Docs »</strong></a>
+  <a href="https://docs.terra.money/develop/feather-js/"><strong>Explore the Docs »</strong></a>
   <br />
   <br/>
-  <a href="https://docs.terrarebels.net/develop/feather-js/common-examples">Examples</a>
+  <a href="https://docs.terra.money/develop/feather-js/common-examples">Examples</a>
   ·
   <a href="https://featherjs.pages.dev">API Reference</a>
   ·
-  <a href="https://www.npmjs.com/package/@terra-rebels/feather.js">NPM Package</a>
+  <a href="https://www.npmjs.com/package/@terra-money/feather.js">NPM Package</a>
   ·
-  <a href="https://github.com/classic-terra/feather.js">GitHub</a>
+  <a href="https://github.com/terra-money/feather.js">GitHub</a>
 </p>
 
 Feather.js is a JavaScript SDK for writing applications that interact with the Terra blockchain from either Node.js, browser, or React Native environments and provides simple abstractions over core data structures, serialization, key management, and API request generation.
@@ -32,29 +32,37 @@ Feather.js is a JavaScript SDK for writing applications that interact with the T
 ## Features
 
 - **Written in TypeScript**, with type definitions
-- Versatile support for [key management](https://docs.terrarebels.net/docs/develop/feather-js/keys.html) solutions
+- Versatile support for [key management](https://docs.terra.money/docs/develop/feather-js/keys.html) solutions
 - Works in Node.js, in the browser, and React Native
-- Exposes the Terra API through [`LCDClient`](https://docs.terrarebels.net/docs/develop/feather-js/query-data.html)
+- Exposes the Terra API through [`LCDClient`](https://docs.terra.money/docs/develop/feather-js/query-data.html)
 - Parses responses into native JavaScript types
 
 We highly suggest using Feather.js with TypeScript, or JavaScript in a code editor that has support for type declarations, so you can take advantage of the helpful type hints that are included with the package.
 
 ## Installation
 
-Grab the latest version off [NPM](https://www.npmjs.com/package/@terra-rebels/feather.js):
+Grab the latest version off [NPM](https://www.npmjs.com/package/@terra-money/feather.js):
 
 ```sh
-npm install @terra-rebels/feather.js
+npm install @terra-money/feather.js
+npm install @terra-money/terra.proto
 ```
+
+
+<!-- ```sh
+npm install typescript
+npm i -d @types/node
+npx tsc
+``` -->
 
 ## Usage
 
-Feather.js can be used in Node.js, as well as inside the browser. Please check the [docs](https://docs.terrarebels.net/docs/develop/feather-js) for notes on how to get up and running.
+Feather.js can be used in Node.js, as well as inside the browser. Please check the [docs](https://docs.terra.money/docs/develop/feather-js) for notes on how to get up and running.
 
 ### Getting blockchain data
 
 ```ts
-import { LCDClient, Coin } from '@terra-rebels/feather.js';
+import { LCDClient, Coin } from '@terra-money/feather.js';
 
 // connect to testnet
 const lcd = LCDClient.fromDefaultConfig('testnet');
@@ -89,10 +97,10 @@ console.log(total);
 
 ### Broadcasting transactions
 
-First, [get](https://faucet.terrarebels.net/) some testnet tokens for `terra1x46rqay4d3cssq8gxxvqz8xt6nwlz4td20k38v`, or use [LocalTerra](https://www.github.com/classic-terra/LocalTerra).
+First, [get](https://faucet.terra.money/) some testnet tokens for `terra1x46rqay4d3cssq8gxxvqz8xt6nwlz4td20k38v`, or use [LocalTerra](https://www.github.com/terra-money/LocalTerra).
 
 ```ts
-import { LCDClient, MsgSend, MnemonicKey } from '@terra-rebels/feather.js';
+import { LCDClient, MsgSend, MnemonicKey } from '@terra-money/feather.js';
 
 // create a key out of a mnemonic
 const mk = new MnemonicKey({
@@ -163,14 +171,14 @@ wallet
 
 ## Feather.js in the browser
 
-You can access all the objects of the `@terra-rebels/feather.js` from the global `Feather` object if you load Feather.js with a `<script>` tag.
+You can access all the objects of the `@terra-money/feather.js` from the global `Feather` object if you load Feather.js with a `<script>` tag.
 
 Include the following in your browser:
 
 ```html
 <script
   crossorigin
-  src="https://unpkg.com/@terra-rebels/feather.js/dist/bundle.js"
+  src="https://unpkg.com/@terra-money/feather.js/dist/bundle.js"
 ></script>
 ```
 
@@ -214,5 +222,5 @@ This software is licensed under the MIT license. See [LICENSE](./LICENSE) for fu
 
 <p>&nbsp;</p>
 <p align="center">
-    <a href="https://terrarebels.net/"><img src="https://assets.website-files.com/611153e7af981472d8da199c/61794f2b6b1c7a1cb9444489_symbol-terra-blue.svg" align="center" width=180/></a>
+    <a href="https://terra.money/"><img src="https://assets.website-files.com/611153e7af981472d8da199c/61794f2b6b1c7a1cb9444489_symbol-terra-blue.svg" align="center" width=180/></a>
 </p>

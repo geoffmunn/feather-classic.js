@@ -4,7 +4,7 @@ import {
   BankAPI,
   DistributionAPI,
   FeeGrantAPI,
-  GovAPI,
+  LegacyGovAPI,
   MintAPI,
   AuthzAPI,
   SlashingAPI,
@@ -14,6 +14,9 @@ import {
   WasmAPI,
   IbcTransferAPI,
   IbcAPI,
+  TokenFactory,
+  FeemarketAPI,
+  SmartaccountAPI,
 } from './api';
 import { LCDUtils } from './LCDUtils';
 import { Wallet } from './Wallet';
@@ -21,8 +24,25 @@ import { Numeric } from '../../core/numeric';
 import { Coins } from '../../core/Coins';
 import { Key } from '../../key';
 import { AllianceAPI } from './api/AllianceAPI';
+import { PobAPI } from './api/PobAPI';
+import { FeeshareAPI } from './api/FeeshareAPI';
+import { GovV1API } from './api/GovV1API';
+import { ICAv1API } from './api/ICAv1API';
+import { ICQv1API } from './api/ICQv1API';
+
+export type AxiosConfig = {
+  /**
+   * The API key to be included in requests sent to the LCD.
+   */
+  apiToken?: string;
+};
 
 export interface LCDClientConfig {
+  /**
+   * The Axios configuration to use when making requests to the LCD.
+   */
+  axiosConfig?: AxiosConfig;
+
   /**
    * The base URL to which LCD requests will be made.
    */
@@ -52,22 +72,31 @@ export interface LCDClientConfig {
 }
 
 const DEFAULT_NETWORK_CONFIG: Record<
-  'mainnet' | 'testnet',
+  'mainnet' | 'testnet' | 'classic',
   Record<string, LCDClientConfig>
 > = {
   mainnet: {
-    'columbus-5': {
-      chainID: 'columbus-5',
-      lcd: 'https://lcd.terrarebels.net',
+    'phoenix-1': {
+      chainID: 'phoenix-1',
+      lcd: 'https://phoenix-lcd.terra.dev',
       gasAdjustment: 1.75,
       gasPrices: { uluna: 0.015 },
       prefix: 'terra',
     },
   },
   testnet: {
-    'rebel-2': {
-      chainID: 'rebel-2',
-      lcd: 'https://lcd.terrarebels.dev',
+    'pisco-1': {
+      chainID: 'pisco-1',
+      lcd: 'https://pisco-lcd.terra.dev',
+      gasAdjustment: 1.75,
+      gasPrices: { uluna: 0.015 },
+      prefix: 'terra',
+    },
+  },
+  classic: {
+    'columbus-5': {
+      chainID: 'columbus-5',
+      lcd: 'https://terra-classic-fcd.publicnode.com',
       gasAdjustment: 1.75,
       gasPrices: { uluna: 0.015 },
       prefix: 'terra',
@@ -101,17 +130,25 @@ export class LCDClient {
   public bank: BankAPI;
   public distribution: DistributionAPI;
   public feeGrant: FeeGrantAPI;
-  public gov: GovAPI;
+  public gov: GovV1API;
+  public legacyGov: LegacyGovAPI;
   public mint: MintAPI;
   public authz: AuthzAPI;
   public slashing: SlashingAPI;
   public staking: StakingAPI;
   public tendermint: TendermintAPI;
+  public tokenfactory: TokenFactory;
   public wasm: WasmAPI;
   public tx: TxAPI;
   public ibc: IbcAPI;
+  public icaV1: ICAv1API;
+  public icqV1: ICQv1API;
   public ibcTransfer: IbcTransferAPI;
+  public pob: PobAPI;
+  public feeshare: FeeshareAPI;
+  public feemarket: FeemarketAPI;
   public utils: LCDUtils;
+  public smartaccount: SmartaccountAPI;
 
   /**
    * Creates a new LCD client with the specified configuration.
@@ -130,7 +167,10 @@ export class LCDClient {
 
     this.apiRequesters = Object.keys(chains).reduce(
       (result: Record<string, APIRequester>, chainID) => {
-        result[chainID] = new APIRequester(chains[chainID].lcd);
+        result[chainID] = new APIRequester(
+          chains[chainID].lcd,
+          chains[chainID].axiosConfig
+        );
         return result;
       },
       {}
@@ -142,21 +182,29 @@ export class LCDClient {
     this.bank = new BankAPI(this);
     this.distribution = new DistributionAPI(this);
     this.feeGrant = new FeeGrantAPI(this);
-    this.gov = new GovAPI(this);
+    this.gov = new GovV1API(this);
+    this.legacyGov = new LegacyGovAPI(this);
     this.mint = new MintAPI(this);
     this.authz = new AuthzAPI(this);
     this.slashing = new SlashingAPI(this);
     this.staking = new StakingAPI(this);
     this.tendermint = new TendermintAPI(this);
+    this.tokenfactory = new TokenFactory(this);
     this.wasm = new WasmAPI(this);
     this.ibc = new IbcAPI(this);
+    this.icaV1 = new ICAv1API(this);
+    this.icqV1 = new ICQv1API(this);
     this.ibcTransfer = new IbcTransferAPI(this);
     this.tx = new TxAPI(this);
+    this.pob = new PobAPI(this);
+    this.feeshare = new FeeshareAPI(this);
+    this.feemarket = new FeemarketAPI(this);
     this.utils = new LCDUtils(this);
+    this.smartaccount = new SmartaccountAPI(this);
   }
 
-  public static fromDefaultConfig(network: 'mainnet' | 'testnet') {
-    // TODO: fetch config from assets.terrarebels.net
+  public static fromDefaultConfig(network: 'mainnet' | 'testnet' | 'classic') {
+    // TODO: fetch config from assets.terra.money
     return new LCDClient(DEFAULT_NETWORK_CONFIG[network]);
   }
 

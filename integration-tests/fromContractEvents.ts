@@ -1,8 +1,8 @@
 import { LCDClient, getContractEvents } from '../src';
 
 const bombay = new LCDClient({
-  chainID: 'columbus-5',
-  URL: 'https://lcd.terrarebels.net',
+  chainID: 'bombay-12',
+  URL: 'https://bombay-lcd.terra.dev',
 });
 
 bombay.tx

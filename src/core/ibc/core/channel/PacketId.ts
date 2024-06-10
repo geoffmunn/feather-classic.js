@@ -1,6 +1,6 @@
 import { PacketId as PacketId_pb } from '@terra-money/terra.proto/ibc/core/channel/v1/channel';
 import { JSONSerializable } from '../../../../util/json';
-import * as Long from 'long';
+import Long from 'long';
 
 /**
  * PacketId is an identifer for a unique Packet

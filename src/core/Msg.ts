@@ -17,7 +17,15 @@ import {
   MsgSubmitProposal,
   MsgVote,
   MsgVoteWeighted,
-} from './gov/msgs';
+  MsgExecLegacyContent,
+} from './gov/v1/msgs';
+import {
+  GovMsg as LegacyGovMsg,
+  MsgDeposit as LegacyMsgDeposit,
+  MsgSubmitProposal as LegacyMsgSubmitProposal,
+  MsgVote as LegacyMsgVote,
+  MsgVoteWeighted as LegacyMsgVoteWeighted,
+} from './gov/v1beta1/msgs';
 import {
   MsgGrantAuthorization,
   MsgRevokeAuthorization,
@@ -42,11 +50,14 @@ import {
 } from './vesting/msgs';
 import {
   AllianceMsg,
-  MsgClaimDelegationRewards as AMsgClaimDelegationRewards,
-  MsgDelegate as AMsgDelegate,
-  MsgRedelegate as AMsgRedelegate,
-  MsgUndelegate as AMsgUndelegate,
-} from './alliance/msgs';
+  MsgClaimDelegationRewards as MsgClaimAllianceDelegationRewards,
+  MsgDelegate as MsgAllianceDelegate,
+  MsgRedelegate as MsgAllianceRedelegate,
+  MsgUndelegate as MsgAllianceUndelegate,
+  MsgCreateAlliance,
+  MsgUpdateAlliance,
+  MsgDeleteAlliance,
+} from './alliance';
 import { CustomMsg, MsgAminoCustom } from './custom/msgs';
 import {
   MsgStoreCode,
@@ -58,6 +69,14 @@ import {
   MsgClearContractAdmin,
   WasmMsg,
 } from './wasm/msgs';
+import {
+  MsgBurn,
+  MsgChangeAdmin,
+  MsgCreateDenom,
+  MsgMint,
+  MsgSetBeforeSendHook,
+  TokenFactoryMsg,
+} from './tokenfactory';
 import { MsgTransfer, IbcTransferMsg } from './ibc/applications/transfer';
 import {
   MsgCreateClient,
@@ -88,17 +107,34 @@ import {
 } from './ibc/msgs/channel';
 import { MsgVerifyInvariant, CrisisMsg } from './crisis';
 import { Any } from '@terra-money/terra.proto/google/protobuf/any';
-import { MsgLiquidStake, MsgRedeemStake } from './stride/msgs';
-import { MsgCreateDenom } from './wasm/msgs/tokenfactory/MsgCreateDenom';
-import { MsgBurn } from './wasm/msgs/tokenfactory/MsgBurn';
-import { MsgChangeAdmin } from './wasm/msgs/tokenfactory/MsgChangeAdmin';
-import { MsgMint } from './wasm/msgs/tokenfactory/MsgMint';
+import { MsgAuctionBid } from './pob/MsgAuctionBid';
+import {
+  FeeshareMsg,
+  MsgCancelFeeShare,
+  MsgRegisterFeeShare,
+  MsgUpdateFeeShare,
+} from './feeshare';
+import {
+  ICAMsg,
+  MsgRegisterInterchainAccount,
+  MsgSendTx,
+} from './ica/controller/v1/msgs';
+import { MsgForceTransfer } from './tokenfactory/MsgForceTransfer';
+import { MsgSetDenomMetadata } from './tokenfactory/MsgSetDenomMetadata';
+import {
+  MsgCreateSmartAccount,
+  MsgDisableSmartAccount,
+  MsgUpdateAuthorization,
+  MsgUpdateTransactionHooks,
+  SmartAccountMsg,
+} from './smartaccount';
 
 export type Msg =
   | BankMsg
   | DistributionMsg
   | FeeGrantMsg
   | GovMsg
+  | LegacyGovMsg
   | MsgAuthMsg
   | SlashingMsg
   | StakingMsg
@@ -108,11 +144,14 @@ export type Msg =
   | IbcClientMsg
   | IbcConnectionMsg
   | IbcChannelMsg
+  | ICAMsg
   | AllianceMsg
   | CustomMsg
-  | MsgLiquidStake
-  | MsgRedeemStake
-  | CrisisMsg;
+  | CrisisMsg
+  | MsgAuctionBid
+  | FeeshareMsg
+  | TokenFactoryMsg
+  | SmartAccountMsg;
 
 export namespace Msg {
   export type Amino =
@@ -120,20 +159,27 @@ export namespace Msg {
     | DistributionMsg.Amino
     | FeeGrantMsg.Amino
     | GovMsg.Amino
+    | LegacyGovMsg.Amino
     | MsgAuthMsg.Amino
     | SlashingMsg.Amino
     | StakingMsg.Amino
     | VestingMsg.Amino
     | WasmMsg.Amino
     | IbcTransferMsg.Amino
+    | AllianceMsg.Amino
     | CustomMsg.Amino
-    | CrisisMsg.Amino;
+    | CrisisMsg.Amino
+    | MsgAuctionBid.Amino
+    | FeeshareMsg.Amino
+    | TokenFactoryMsg.Amino
+    | SmartAccountMsg.Amino;
 
   export type Data =
     | BankMsg.Data
     | DistributionMsg.Data
     | FeeGrantMsg.Data
     | GovMsg.Data
+    | LegacyGovMsg.Data
     | MsgAuthMsg.Data
     | SlashingMsg.Data
     | StakingMsg.Data
@@ -143,39 +189,77 @@ export namespace Msg {
     | IbcClientMsg.Data
     | IbcConnectionMsg.Data
     | IbcChannelMsg.Data
-    | AMsgClaimDelegationRewards.Data
-    | AMsgDelegate.Data
-    | AMsgRedelegate.Data
-    | AMsgUndelegate.Data
+    | ICAMsg.Data
+    | AllianceMsg.Data
     | CustomMsg.Data
-    | MsgLiquidStake.Data
-    | MsgRedeemStake.Data
-    | CrisisMsg.Data;
+    | CrisisMsg.Data
+    | MsgAuctionBid.Data
+    | FeeshareMsg.Data
+    | TokenFactoryMsg.Data
+    | SmartAccountMsg.Data;
 
   export type Proto =
     | BankMsg.Proto
     | DistributionMsg.Proto
     | FeeGrantMsg.Proto
     | GovMsg.Proto
+    | LegacyGovMsg.Proto
     | MsgAuthMsg.Proto
     | SlashingMsg.Proto
     | StakingMsg.Proto
     | VestingMsg.Proto
     | WasmMsg.Proto
     | IbcTransferMsg.Proto
+    | ICAMsg.Proto
     | IbcClientMsg.Proto
     | IbcConnectionMsg.Proto
     | IbcChannelMsg.Proto
-    | AMsgClaimDelegationRewards.Proto
-    | AMsgDelegate.Proto
-    | AMsgRedelegate.Proto
-    | AMsgUndelegate.Proto
-    | MsgLiquidStake.Proto
-    | MsgRedeemStake.Proto
-    | CrisisMsg.Proto;
+    | AllianceMsg.Proto
+    | CrisisMsg.Proto
+    | MsgAuctionBid.Proto
+    | FeeshareMsg.Proto
+    | TokenFactoryMsg.Proto
+    | SmartAccountMsg.Proto;
 
   export function fromAmino(data: Msg.Amino, isClassic?: boolean): Msg {
     switch (data.type) {
+      // alliance
+      case 'alliance/MsgCreateAlliance':
+        return MsgCreateAlliance.fromAmino(
+          data as MsgCreateAlliance.Amino,
+          isClassic
+        );
+      case 'alliance/MsgUpdateAlliance':
+        return MsgUpdateAlliance.fromAmino(
+          data as MsgUpdateAlliance.Amino,
+          isClassic
+        );
+      case 'alliance/MsgDeleteAlliance':
+        return MsgDeleteAlliance.fromAmino(
+          data as MsgDeleteAlliance.Amino,
+          isClassic
+        );
+      case 'alliance/MsgDelegate':
+        return MsgAllianceDelegate.fromAmino(
+          data as MsgAllianceDelegate.Amino,
+          isClassic
+        );
+      case 'alliance/MsgRedelegate':
+        return MsgAllianceRedelegate.fromAmino(
+          data as MsgAllianceRedelegate.Amino,
+          isClassic
+        );
+      case 'alliance/MsgUndelegate':
+        return MsgAllianceUndelegate.fromAmino(
+          data as MsgAllianceUndelegate.Amino,
+          isClassic
+        );
+      case 'alliance/MsgClaimDelegationRewards':
+        return MsgClaimAllianceDelegationRewards.fromAmino(
+          data as MsgClaimAllianceDelegationRewards.Amino,
+          isClassic
+        );
+
       // bank
       case 'bank/MsgSend':
       case 'cosmos-sdk/MsgSend':
@@ -226,20 +310,44 @@ export namespace Msg {
       // gov
       case 'gov/MsgDeposit':
       case 'cosmos-sdk/MsgDeposit':
-        return MsgDeposit.fromAmino(data as MsgDeposit.Amino, isClassic);
+        return LegacyMsgDeposit.fromAmino(
+          data as LegacyMsgDeposit.Amino,
+          isClassic
+        );
       case 'gov/MsgSubmitProposal':
       case 'cosmos-sdk/MsgSubmitProposal':
-        return MsgSubmitProposal.fromAmino(
-          data as MsgSubmitProposal.Amino,
+        return LegacyMsgSubmitProposal.fromAmino(
+          data as LegacyMsgSubmitProposal.Amino,
           isClassic
         );
       case 'gov/MsgVote':
       case 'cosmos-sdk/MsgVote':
-        return MsgVote.fromAmino(data as MsgVote.Amino, isClassic);
+        return LegacyMsgVote.fromAmino(data as LegacyMsgVote.Amino, isClassic);
       case 'gov/MsgVoteWeighted':
       case 'cosmos-sdk/MsgVoteWeighted':
+        return LegacyMsgVoteWeighted.fromAmino(
+          data as LegacyMsgVoteWeighted.Amino,
+          isClassic
+        );
+
+      // gov
+      case 'cosmos-sdk/v1/MsgDeposit':
+        return MsgDeposit.fromAmino(data as MsgDeposit.Amino, isClassic);
+      case 'cosmos-sdk/v1/MsgSubmitProposal':
+        return MsgSubmitProposal.fromAmino(
+          data as MsgSubmitProposal.Amino,
+          isClassic
+        );
+      case 'cosmos-sdk/v1/MsgVote':
+        return MsgVote.fromAmino(data as MsgVote.Amino, isClassic);
+      case 'cosmos-sdk/v1/MsgVoteWeighted':
         return MsgVoteWeighted.fromAmino(
           data as MsgVoteWeighted.Amino,
+          isClassic
+        );
+      case 'cosmos-sdk/v1/MsgExecLegacyContent':
+        return MsgExecLegacyContent.fromAmino(
+          data as MsgExecLegacyContent.Amino,
           isClassic
         );
 
@@ -352,6 +460,8 @@ export namespace Msg {
           data as MsgClearContractAdmin.Amino,
           isClassic
         );
+
+      //token-factory
       case 'osmosis/tokenfactory/create-denom':
         return MsgCreateDenom.fromAmino(data as MsgCreateDenom.Amino);
       case 'osmosis/tokenfactory/burn':
@@ -360,9 +470,19 @@ export namespace Msg {
         return MsgChangeAdmin.fromAmino(data as MsgChangeAdmin.Amino);
       case 'osmosis/tokenfactory/mint':
         return MsgMint.fromAmino(data as MsgMint.Amino);
+      case 'osmosis/tokenfactory/set-beforesend-hook':
+        return MsgSetBeforeSendHook.fromAmino(
+          data as MsgSetBeforeSendHook.Amino
+        );
+      case 'osmosis/tokenfactory/force-transfer':
+        return MsgForceTransfer.fromAmino(data as MsgForceTransfer.Amino);
+      case 'osmosis/tokenfactory/set-metadata':
+        return MsgSetDenomMetadata.fromAmino(data as MsgSetDenomMetadata.Amino);
+
       // ibc-transfer
       case 'cosmos-sdk/MsgTransfer':
         return MsgTransfer.fromAmino(data as MsgTransfer.Amino, isClassic);
+
       // crisis
       case 'crisis/MsgVerifyInvariant':
       case 'cosmos-sdk/MsgVerifyInvariant':
@@ -371,26 +491,62 @@ export namespace Msg {
           isClassic
         );
 
+      // Pob module
+      case 'pob/MsgAuctionBid':
+        return MsgAuctionBid.fromAmino(data as MsgAuctionBid.Amino, isClassic);
+
+      // Feeshare module
+      case 'juno/MsgRegisterFeeShare':
+        return MsgRegisterFeeShare.fromAmino(
+          data as MsgRegisterFeeShare.Amino,
+          isClassic
+        );
+      case 'juno/MsgUpdateFeeShare':
+        return MsgUpdateFeeShare.fromAmino(
+          data as MsgUpdateFeeShare.Amino,
+          isClassic
+        );
+      case 'juno/MsgCancelFeeShare':
+        return MsgCancelFeeShare.fromAmino(
+          data as MsgCancelFeeShare.Amino,
+          isClassic
+        );
+
+      // SmartAccount module
+      case 'terra/MsgCreateSmartAccount':
+        return MsgCreateSmartAccount.fromAmino(
+          data as MsgCreateSmartAccount.Amino
+        );
+      case 'terra/MsgDisableSmartAccount':
+        return MsgDisableSmartAccount.fromAmino(
+          data as MsgDisableSmartAccount.Amino
+        );
+      case 'terra/MsgUpdateAuthorization':
+        return MsgUpdateAuthorization.fromAmino(
+          data as MsgUpdateAuthorization.Amino
+        );
+      case 'terra/MsgUpdateTransactionHooks':
+        return MsgUpdateTransactionHooks.fromAmino(
+          data as MsgUpdateTransactionHooks.Amino
+        );
+
       // custom
       default:
-        return MsgAminoCustom.fromAmino(data, isClassic);
+        return MsgAminoCustom.fromAmino(data as any, isClassic);
     }
   }
+
   export function fromData(data: Msg.Data, isClassic?: boolean): Msg {
     switch (data['@type']) {
-      case '/stride.stakeibc.MsgLiquidStake':
-        return MsgLiquidStake.fromData(data, isClassic);
-      case '/stride.stakeibc.MsgRedeemStake':
-        return MsgRedeemStake.fromData(data, isClassic);
       // alliance
       case '/alliance.alliance.MsgDelegate':
-        return AMsgDelegate.fromData(data, isClassic);
+        return MsgAllianceDelegate.fromData(data, isClassic);
       case '/alliance.alliance.MsgRedelegate':
-        return AMsgRedelegate.fromData(data, isClassic);
+        return MsgAllianceRedelegate.fromData(data, isClassic);
       case '/alliance.alliance.MsgUndelegate':
-        return AMsgUndelegate.fromData(data, isClassic);
+        return MsgAllianceUndelegate.fromData(data, isClassic);
       case '/alliance.alliance.MsgClaimDelegationRewards':
-        return AMsgClaimDelegationRewards.fromData(data, isClassic);
+        return MsgClaimAllianceDelegationRewards.fromData(data, isClassic);
 
       // bank
       case '/cosmos.bank.v1beta1.MsgSend':
@@ -416,13 +572,25 @@ export namespace Msg {
 
       // gov
       case '/cosmos.gov.v1beta1.MsgDeposit':
-        return MsgDeposit.fromData(data, isClassic);
+        return LegacyMsgDeposit.fromData(data, isClassic);
       case '/cosmos.gov.v1beta1.MsgSubmitProposal':
-        return MsgSubmitProposal.fromData(data, isClassic);
+        return LegacyMsgSubmitProposal.fromData(data, isClassic);
       case '/cosmos.gov.v1beta1.MsgVote':
-        return MsgVote.fromData(data, isClassic);
+        return LegacyMsgVote.fromData(data, isClassic);
       case '/cosmos.gov.v1beta1.MsgVoteWeighted':
+        return LegacyMsgVoteWeighted.fromData(data, isClassic);
+
+      // gov v1
+      case '/cosmos.gov.v1.MsgDeposit':
+        return MsgDeposit.fromData(data, isClassic);
+      case '/cosmos.gov.v1.MsgSubmitProposal':
+        return MsgSubmitProposal.fromData(data, isClassic);
+      case '/cosmos.gov.v1.MsgVote':
+        return MsgVote.fromData(data, isClassic);
+      case '/cosmos.gov.v1.MsgVoteWeighted':
         return MsgVoteWeighted.fromData(data, isClassic);
+      case '/cosmos.gov.v1.MsgExecLegacyContent':
+        return MsgExecLegacyContent.fromData(data, isClassic);
 
       // authz
       case '/cosmos.authz.v1beta1.MsgGrant':
@@ -479,18 +647,32 @@ export namespace Msg {
       case '/terra.wasm.v1beta1.MsgClearContractAdmin':
       case '/cosmwasm.wasm.v1.MsgClearAdmin':
         return MsgClearContractAdmin.fromData(data, isClassic);
-      case '/cosmwasm.tokenfactory.v1beta1.MsgCreateDenom':
+
+      // token factory
+      case '/osmosis.tokenfactory.v1beta1.MsgCreateDenom':
         return MsgCreateDenom.fromData(data);
-      case '/cosmwasm.tokenfactory.v1beta1.MsgBurn':
+      case '/osmosis.tokenfactory.v1beta1.MsgBurn':
         return MsgBurn.fromData(data);
-      case '/cosmwasm.tokenfactory.v1beta1.MsgChangeAdmin':
+      case '/osmosis.tokenfactory.v1beta1.MsgChangeAdmin':
         return MsgChangeAdmin.fromData(data);
-      case '/cosmwasm.tokenfactory.v1beta1.MsgMint':
+      case '/osmosis.tokenfactory.v1beta1.MsgMint':
         return MsgMint.fromData(data);
+      case '/osmosis.tokenfactory.v1beta1.MsgSetBeforeSendHook':
+        return MsgSetBeforeSendHook.fromData(data);
+      case '/osmosis.tokenfactory.v1beta1.MsgForceTransfer':
+        return MsgForceTransfer.fromData(data);
+      case '/osmosis.tokenfactory.v1beta1.MsgSetDenomMetadata':
+        return MsgSetDenomMetadata.fromData(data);
 
       // ibc-transfer
       case '/ibc.applications.transfer.v1.MsgTransfer':
         return MsgTransfer.fromData(data, isClassic);
+
+      // ibc ica
+      case '/ibc.applications.interchain_accounts.controller.v1.MsgRegisterInterchainAccount':
+        return MsgRegisterInterchainAccount.fromData(data, isClassic);
+      case '/ibc.applications.interchain_accounts.controller.v1.MsgSendTx':
+        return MsgSendTx.fromData(data, isClassic);
 
       // ibc-client
       case '/ibc.core.client.v1.MsgCreateClient':
@@ -538,27 +720,51 @@ export namespace Msg {
       case '/cosmos.crisis.v1beta1.MsgVerifyInvariant':
         return MsgVerifyInvariant.fromData(data, isClassic);
 
+      // pob module
+      case '/pob.builder.v1.MsgAuctionBid':
+        return MsgAuctionBid.fromData(data, isClassic);
+
+      // Feeshare
+      case '/juno.feeshare.v1.MsgRegisterFeeShare':
+        return MsgRegisterFeeShare.fromData(data, isClassic);
+      case '/juno.feeshare.v1.MsgUpdateFeeShare':
+        return MsgUpdateFeeShare.fromData(data, isClassic);
+      case '/juno.feeshare.v1.MsgCancelFeeShare':
+        return MsgCancelFeeShare.fromData(data, isClassic);
+
+      // SmartAccount
+      case '/terra.smartaccount.v1.MsgCreateSmartAccount':
+        return MsgCreateSmartAccount.fromData(data);
+      case '/terra.smartaccount.v1.MsgDisableSmartAccount':
+        return MsgDisableSmartAccount.fromData(data);
+      case '/terra.smartaccount.v1.MsgUpdateAuthorization':
+        return MsgUpdateAuthorization.fromData(data);
+      case '/terra.smartaccount.v1.MsgUpdateTransactionHooks':
+        return MsgUpdateTransactionHooks.fromData(data);
+
       // custom
       default:
-        return MsgAminoCustom.fromData(data, isClassic);
+        return MsgAminoCustom.fromData(data as any, isClassic);
     }
   }
 
   export function fromProto(proto: Any, isClassic?: boolean): Msg {
     switch (proto.typeUrl) {
-      case '/stride.stakeibc.MsgLiquidStake':
-        return MsgLiquidStake.unpackAny(proto, isClassic);
-      case '/stride.stakeibc.MsgRedeemStake':
-        return MsgRedeemStake.unpackAny(proto, isClassic);
       // alliance
+      case '/alliance.alliance.MsgCreateAlliance':
+        return MsgCreateAlliance.unpackAny(proto, isClassic);
+      case '/alliance.alliance.MsgUpdateAlliance':
+        return MsgUpdateAlliance.unpackAny(proto, isClassic);
+      case '/alliance.alliance.MsgDeleteAlliance':
+        return MsgDeleteAlliance.unpackAny(proto, isClassic);
       case '/alliance.alliance.MsgDelegate':
-        return AMsgDelegate.unpackAny(proto, isClassic);
+        return MsgAllianceDelegate.unpackAny(proto, isClassic);
       case '/alliance.alliance.MsgRedelegate':
-        return AMsgRedelegate.unpackAny(proto, isClassic);
+        return MsgAllianceRedelegate.unpackAny(proto, isClassic);
       case '/alliance.alliance.MsgUndelegate':
-        return AMsgUndelegate.unpackAny(proto, isClassic);
+        return MsgAllianceUndelegate.unpackAny(proto, isClassic);
       case '/alliance.alliance.MsgClaimDelegationRewards':
-        return AMsgClaimDelegationRewards.unpackAny(proto, isClassic);
+        return MsgClaimAllianceDelegationRewards.unpackAny(proto, isClassic);
 
       // bank
       case '/cosmos.bank.v1beta1.MsgSend':
@@ -584,11 +790,23 @@ export namespace Msg {
 
       // gov
       case '/cosmos.gov.v1beta1.MsgDeposit':
-        return MsgDeposit.unpackAny(proto, isClassic);
+        return LegacyMsgDeposit.unpackAny(proto, isClassic);
       case '/cosmos.gov.v1beta1.MsgSubmitProposal':
-        return MsgSubmitProposal.unpackAny(proto, isClassic);
+        return LegacyMsgSubmitProposal.unpackAny(proto, isClassic);
       case '/cosmos.gov.v1beta1.MsgVote':
+        return LegacyMsgVote.unpackAny(proto, isClassic);
+
+      // gov
+      case '/cosmos.gov.v1.MsgDeposit':
+        return MsgDeposit.unpackAny(proto, isClassic);
+      case '/cosmos.gov.v1.MsgSubmitProposal':
+        return MsgSubmitProposal.unpackAny(proto, isClassic);
+      case '/cosmos.gov.v1.MsgVote':
         return MsgVote.unpackAny(proto, isClassic);
+      case '/cosmos.gov.v1.MsgVoteWeighted':
+        return MsgVoteWeighted.unpackAny(proto, isClassic);
+      case '/cosmos.gov.v1.MsgExecLegacyContent':
+        return MsgExecLegacyContent.unpackAny(proto, isClassic);
 
       // authz
       case '/cosmos.authz.v1beta1.MsgGrant':
@@ -645,18 +863,32 @@ export namespace Msg {
       case '/terra.wasm.v1beta1.MsgClearContractAdmin':
       case '/cosmwasm.wasm.v1.MsgClearAdmin':
         return MsgClearContractAdmin.unpackAny(proto, isClassic);
-      case '/cosmwasm.tokenfactory.v1beta1.MsgCreateDenom':
+
+      // token factory
+      case '/osmosis.tokenfactory.v1beta1.MsgCreateDenom':
         return MsgCreateDenom.unpackAny(proto, isClassic);
-      case '/cosmwasm.tokenfactory.v1beta1.MsgBurn':
+      case '/osmosis.tokenfactory.v1beta1.MsgBurn':
         return MsgBurn.unpackAny(proto, isClassic);
-      case '/cosmwasm.tokenfactory.v1beta1.MsgChangeAdmin':
+      case '/osmosis.tokenfactory.v1beta1.MsgChangeAdmin':
         return MsgChangeAdmin.unpackAny(proto, isClassic);
-      case '/cosmwasm.tokenfactory.v1beta1.MsgMint':
+      case '/osmosis.tokenfactory.v1beta1.MsgMint':
         return MsgMint.unpackAny(proto, isClassic);
+      case '/osmosis.tokenfactory.v1beta1.MsgSetBeforeSendHook':
+        return MsgSetBeforeSendHook.unpackAny(proto);
+      case '/osmosis.tokenfactory.v1beta1.MsgForceTransfer':
+        return MsgForceTransfer.unpackAny(proto);
+      case '/osmosis.tokenfactory.v1beta1.MsgSetDenomMetadata':
+        return MsgSetDenomMetadata.unpackAny(proto);
 
       // ibc-transfer
       case '/ibc.applications.transfer.v1.MsgTransfer':
         return MsgTransfer.unpackAny(proto, isClassic);
+
+      // ibc ica
+      case '/ibc.applications.interchain_accounts.controller.v1.MsgRegisterInterchainAccount':
+        return MsgRegisterInterchainAccount.unpackAny(proto, isClassic);
+      case '/ibc.applications.interchain_accounts.controller.v1.MsgSendTx':
+        return MsgSendTx.unpackAny(proto, isClassic);
 
       // ibc-client
       case '/ibc.core.client.v1.MsgCreateClient':
@@ -703,6 +935,28 @@ export namespace Msg {
       // crisis
       case '/cosmos.crisis.v1beta1.MsgVerifyInvariant':
         return MsgVerifyInvariant.unpackAny(proto, isClassic);
+
+      case '/pob.builder.v1.MsgAuctionBid':
+        return MsgAuctionBid.unpackAny(proto, isClassic);
+
+      // Feeshare
+      case '/juno.feeshare.v1.MsgRegisterFeeShare':
+        return MsgRegisterFeeShare.unpackAny(proto, isClassic);
+      case '/juno.feeshare.v1.MsgUpdateFeeShare':
+        return MsgUpdateFeeShare.unpackAny(proto, isClassic);
+      case '/juno.feeshare.v1.MsgCancelFeeShare':
+        return MsgCancelFeeShare.unpackAny(proto, isClassic);
+
+      // SmartAccount
+      case '/terra.smartaccount.v1.MsgCreateSmartAccount':
+        return MsgCreateSmartAccount.unpackAny(proto);
+      case '/terra.smartaccount.v1.MsgDisableSmartAccount':
+        return MsgDisableSmartAccount.unpackAny(proto);
+      case '/terra.smartaccount.v1.MsgUpdateAuthorization':
+        return MsgUpdateAuthorization.unpackAny(proto);
+      case '/terra.smartaccount.v1.MsgUpdateTransactionHooks':
+        return MsgUpdateTransactionHooks.unpackAny(proto);
+
       default:
         throw Error(`not supported msg ${proto.typeUrl}`);
     }
