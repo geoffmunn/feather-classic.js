@@ -21,8 +21,6 @@ const commonConfig = {
     fallback: {
       crypto: require.resolve("crypto-browserify"),
       assert: require.resolve('assert/'),
-      stream: require.resolve("stream-browserify"),
-      buffer: require.resolve("buffer/"),
     },
   },
   plugins: [
@@ -53,7 +51,7 @@ const webConfig = {
     ...commonConfig.resolve,
     fallback: {
       stream: require.resolve('stream-browserify'),
-      buffer: require.resolve('buffer/'),
+      buffer: require.resolve('buffer'),
     },
   },
   plugins: [
@@ -61,8 +59,11 @@ const webConfig = {
     new webpack.ProvidePlugin({
       Buffer: ['buffer', 'Buffer'],
     }),
+    new webpack.ProvidePlugin({
+      process: 'process/browser',
+    }),
     // new BundleAnalyzerPlugin(),
-  ]
+  ],
 };
 
 const nodeConfig = {

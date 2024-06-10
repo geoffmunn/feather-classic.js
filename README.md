@@ -45,15 +45,7 @@ Grab the latest version off [NPM](https://www.npmjs.com/package/@terra-money/fea
 
 ```sh
 npm install @terra-money/feather.js
-npm install @terra-money/terra.proto
 ```
-
-
-<!-- ```sh
-npm install typescript
-npm i -d @types/node
-npx tsc
-``` -->
 
 ## Usage
 
